@@ -1,37 +1,67 @@
-Instalação
-1º Abrir o projeto pelo delphi com o projeto aberto na aba "Project Manager"  clicar com o botão direito no menu que foi aberto selecionar a opção "Build", 
-se não ocorrer nenhum erro realizar o mesmo processo e selecionar a opção "Install" do menu.
+Componentes / Classes
 
-2º Adicionar a library path do caminho ondem foi descompactado o projeto. 
-
-Componentes / Clases
 
 TMigrator
-   Essa clase contem o core do migrador, responsavel por criação do cotrole de histórico das migrações, execução das migrações pendentes e reversões de migrações já executadas.
-   Sendo uma classe abstrada deve ser implementado para cada banco de dados correspondente devido seus próprio dialeto SQL.
-   
-   Propertys
-	SQLConnection : Conexão do banco de dados
-	MigrationClassRegister : componente que contem todas as implementações da interface IMigrationScript
-	SystemVersion : Versão da migração, podendo ser controlada pela versão do sistema que está executando os script.
-	DialectType: Tipo de dialeto de SQL que sera utilizado, no momento só está implementado oracle. 
+Essa classe contem o core do migrador, responsável por criação do controle de histórico das migrações, execução das migrações pendentes e reversões de migrações já executadas.
+Sendo uma classe abstraída deve ser implementado para cada banco de dados correspondente devido seus próprio dialeto SQL.
+
+Property
+SQLConnection : Conexão do banco de dados
+MigrationClassRegister : componente que contem todas as implementações da interface IMigrationScript
+SystemVersion : Versão da migração, podendo ser controlada pela versão do sistema que está executando os script.
+DialectType: Tipo de dialeto de SQL que sera utilizado, no momento só está implementado Oracle.
 
 TMigratorOracle
-	Extenção da classe TMigrator, responsavel pelas implementação do banco de dados oracle.
-	
+Extensão da classe TMigrator, responsável pelas implementação do banco de dados Oracle.
+
 TMigrationRegisterScript
-	Responsavel por registrar todos os script de migrations implementado atravez da interface "IMigrationScript"
-	
-	Events
-		MigrationRigister: evento de registro dos scripts, cada classe que foi implementada a interface "IMigrationScript" 
-		deve ser registrada nesse evento no utilizando o método AppendMigration disponibilizado pelo parametro sender
-		
-IMigrationScript
-	Interface que deve ser implementada para controlar cada alteração que foi realizada no banco de dados.
-	Metodos
-		MigrationName: nome da migration não pode ter nomes repetidos devem ser unicos, para não gerar confução sugiro utilizar o nome da classe criada 
-		MigrationAuthor: nome do autor que realiz a criação da migração, utilizado para geração de histórico e controle de erros.
-		Up(aDialect : TSQLDialect): esse método é responsavel pelo script de criação do banco, podendo ser criado pelas função pré definida ou CustomScript 
-					  onde é passado uma string com o script sql e a classe realiza a exeução.
-		Down(aDialect : TSQLDialect): método responsavel por reverter o script rodado no métodos Up caso algum erro ocorra, no momento que esse método sera executado a ferramenta realiza uma pergunta para usuário
-					                  caso não queria reverter o script	
+Responsável por registrar todos os script de migrations implementado através da interface "IMigrationScript"
+
+Events
+MigrationRigister: evento de registro dos scripts, cada classe que foi implementada a interface "IMigrationScript"
+deve ser registrada nesse evento no utilizando o método AppendMigration disponibilizado pelo parametro sender
+
+TSQLDialect
+Classe responsável por criação do script e execução dos script SQL, para criação de script pode ser utilizado métodos pré-definido ou criar um script SQL e passar como parâmetro para método "CustonScript"
+Métodos  pré-definido
+
+CreateTable(tableName : string; columns : TObjectList<TColumnOptions>)
+DropTable(tableName : string)
+CreateColumn(tableName : string; column: TCOlumnOptions )
+DropColumn(tableName, columnName : string)
+CreateForeginKey(foreginKeyOptions : TForeginKeyOptions)
+CreateUniqueKey(uniqueKeyOptions : TUniqueKeyOptions)
+DropConstraint(tableName : string; foreginKeyName : string)
+CreatePrimaryKey(primaryKeyOptions : TPrimaryKeyOptions)
+
+Método de execução de SQL Nativo.
+CustomScript(aScript : string)
+
+TCOlumnOptions
+Property
+ColumnName:Nome da coluna
+ColumnType : Tipo de dado da coluna
+Length : tamanho do campo caso for varchar // caso o campo for numeric pode deixar zerado
+Precision : precisão do campo para numérico (11,2) (11,6) // caso o campo for string pode deixar zerado
+NotNull : deve ser True para coluna ser not Null, false para coluna Null
+DefaultValue : string  // caso não tiver um valor default deve se atribuir string vazia.
+
+TForeginKeyOptions
+Property
+Name : Nome da FK para registrar no banco de dados
+TableOrigin : tabela de origem
+TableDestiny : tabela de destino(referencia)
+ColumnTableOrigin : lista de colunas da tabela de origem // obs: também é possível passar string separada por virgula caso tiver N campos
+ColumnTableDestiny : lista de colunas da tabela de destino(referencia) // obs: também é possível passar string separada por virgula caso tiver N campos
+
+TUniqueKeyOptions
+Property
+Name : Nome da UK no banco de dados
+TableName : table que sera criado a UK
+Columns : lista de campos da UK
+
+TPrimaryKeyOptions
+Property
+Name : Nome da Pk para banco de dados
+TableName : Nome da tabela da Pk
+Columns : colunas que fazem parte da chave.

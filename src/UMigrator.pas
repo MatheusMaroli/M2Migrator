@@ -156,7 +156,6 @@ begin
     returnMethodName := rttiMethodName.Invoke(Instance, []);
     returnMethodAuthor := rttiMethodAuthor.Invoke(Instance, []);
 
-
     if not MigrationExecuted(returnMethodName.AsString) then
     begin
       try
@@ -167,6 +166,7 @@ begin
           if MessageDlg('Execute Reverter Script ?',mtCustom,[mbOk,mbCancel ], 0) = mrOK then
               rttiMethodDown.Invoke(Instance, [SQLDialect]);
           ShowMessage('Fail to execute Up method for migration name ' + returnMethodName.AsString + '. Fail ===> ' + e.Message);
+          Exit();
         end;
       end;
 
