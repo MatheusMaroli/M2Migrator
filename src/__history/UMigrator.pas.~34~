@@ -60,18 +60,12 @@ interface
     protected
       function StartedMigrations(): Boolean; override;
       procedure InserLogMigration(aMigrationName, aMigrationAuthor : string);override;
-
-      constructor Create(AOwner : TComponent);overload;override;
-      constructor Create();overload;
     end;
 
     TMigratorFirebird = class(TMigrator)
     protected
       function StartedMigrations(): Boolean; override;
       procedure InserLogMigration(aMigrationName, aMigrationAuthor : string);override;
-
-      constructor Create(AOwner : TComponent);overload;override;
-      constructor Create();overload;
     end;
 
     procedure Register;
@@ -222,6 +216,8 @@ begin
   end;
 end;
 
+
+
 procedure TMigrator.ExecuteRegisteredSingleMigration(aName: string);
 var migrations : TList<TClass>;
 var migration : TClass;
@@ -331,6 +327,8 @@ begin
     QuotedStr(aMigrationAuthor) + ', ' +   QuotedStr(aMigrationName) + ', SYSDATE, ' + QuotedStr(SystemVersion) + ')');
 end;
 
+
+
 function TMigratorOracle.StartedMigrations: Boolean;
 var query : TFDQuery;
 begin
@@ -347,17 +345,6 @@ begin
 end;
 
 { TMigratorPostgres }
-
-constructor TMigratorPostgre.Create;
-begin
-
-end;
-
-constructor TMigratorPostgre.Create(AOwner: TComponent);
-begin
-  inherited;
-  DialectType := TSQLDialectType.Postgre;
-end;
 
 procedure TMigratorPostgre.InserLogMigration(aMigrationName, aMigrationAuthor: string);
 begin
@@ -381,17 +368,6 @@ begin
 end;
 
 { TMigratorFirebird }
-
-constructor TMigratorFirebird.Create;
-begin
-
-end;
-
-constructor TMigratorFirebird.Create(AOwner: TComponent);
-begin
-  inherited;
-  DialectType := TSQLDialectType.Firebird;
-end;
 
 procedure TMigratorFirebird.InserLogMigration(aMigrationName, aMigrationAuthor: string);
 begin

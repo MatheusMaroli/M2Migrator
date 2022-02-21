@@ -307,6 +307,21 @@ end;
 
 { TSQLDialectPostgre }
 
+procedure TSQLDialectPostgre.CreateForeginKey(foreginKeyOptions: TForeginKeyOptions);
+var script : string;
+begin
+  try
+    script := ' ALTER TABLE ' +foreginKeyOptions.TableOrigin + ' ADD '+
+    ' CONSTRAINT ' + foreginKeyOptions.Name + ' FOREIGN KEY ('+  WrapperColumnForConstraint(foreginKeyOptions.ColumnTableOrigin) + ')' +
+    ' REFERENCES ' + foreginKeyOptions.TableDestiny + ' ('+ WrapperColumnForConstraint(foreginKeyOptions.ColumnTableDestiny) +')';
+    ExecuteSQLScript(script);
+  except
+    on E: Exception do
+      raise Exception.Create('Fail to execute method CreateForeginKey on default Implemention. Fail Message ===> ' + e.Message);
+  end;
+
+end;
+
 function TSQLDialectPostgre.WrapperDataBaseNumber(column: TColumnOptions): string;
 begin
   Result := ' numeric( '+ FloatToStr(column.Precision) + ')';
@@ -331,9 +346,9 @@ procedure TSQLDialectOracle.CreateForeginKey(foreginKeyOptions: TForeginKeyOptio
 var script : string;
 begin
   try
-    script := ' ALTER TABLE ' +foreginKeyOptions.TableOrigin + ' ADD  ('+
+    script := ' ALTER TABLE ' +foreginKeyOptions.TableOrigin + ' ADD  '+
     ' CONSTRAINT ' + foreginKeyOptions.Name + ' FOREIGN KEY ( '+  WrapperColumnForConstraint(foreginKeyOptions.ColumnTableOrigin) + ')' +
-    ' REFERENCES ' + foreginKeyOptions.TableDestiny + ' ( '+ WrapperColumnForConstraint(foreginKeyOptions.ColumnTableDestiny) +'))';
+    ' REFERENCES ' + foreginKeyOptions.TableDestiny + ' ( '+ WrapperColumnForConstraint(foreginKeyOptions.ColumnTableDestiny) +')';
     ExecuteSQLScript(script);
   except
     on E: Exception do

@@ -331,9 +331,9 @@ procedure TSQLDialectOracle.CreateForeginKey(foreginKeyOptions: TForeginKeyOptio
 var script : string;
 begin
   try
-    script := ' ALTER TABLE ' +foreginKeyOptions.TableOrigin + ' ADD  ('+
+    script := ' ALTER TABLE ' +foreginKeyOptions.TableOrigin + ' ADD  '+
     ' CONSTRAINT ' + foreginKeyOptions.Name + ' FOREIGN KEY ( '+  WrapperColumnForConstraint(foreginKeyOptions.ColumnTableOrigin) + ')' +
-    ' REFERENCES ' + foreginKeyOptions.TableDestiny + ' ( '+ WrapperColumnForConstraint(foreginKeyOptions.ColumnTableDestiny) +'))';
+    ' REFERENCES ' + foreginKeyOptions.TableDestiny + ' ( '+ WrapperColumnForConstraint(foreginKeyOptions.ColumnTableDestiny) +')';
     ExecuteSQLScript(script);
   except
     on E: Exception do

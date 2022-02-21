@@ -23,7 +23,7 @@ interface
 
       constructor Create(aColumnName : string;
         aColumnType : TDataBaseType;
-        aLength :Double; aPrecision : Double;
+        aLength :integer; aPrecision : Double;
         aNotNull : Boolean;
         aDefaultValue : string);
 
@@ -32,7 +32,7 @@ implementation
 
 { TColumnOptions }
 
-constructor TColumnOptions.Create(aColumnName: string; aColumnType: TDataBaseType; aLength: Double; aPrecision: Double; aNotNull: Boolean; aDefaultValue: string);
+constructor TColumnOptions.Create(aColumnName: string; aColumnType: TDataBaseType; aLength: integer; aPrecision: Double; aNotNull: Boolean; aDefaultValue: string);
 begin
   ColumnName := aColumnName;
   ColumnType := aColumnType;

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2022/02/19 15:34:45.000.411,=C:\dev\M2Migrator\src\Unit1.pas</Transaction>
+    <Transaction>2022/02/19 15:36:16.000.657,C:\dev\M2Migrator\src\USQLDialectPostgre.pas=C:\dev\M2Migrator\src\Unit1.pas</Transaction>
+    <Transaction>2022/02/19 15:48:23.000.498,=C:\dev\M2Migrator\src\Unit1.pas</Transaction>
+    <Transaction>2022/02/19 15:48:40.000.206,C:\dev\M2Migrator\src\USQLDialectOracle.pas=C:\dev\M2Migrator\src\Unit1.pas</Transaction>
+    <Transaction>2022/02/19 16:08:42.000.016,C:\dev\M2Migrator\src\USQLDialectPostgre.pas=</Transaction>
+    <Transaction>2022/02/19 16:08:45.000.612,C:\dev\M2Migrator\src\USQLDialectOracle.pas=</Transaction>
+    <Transaction>2022/02/19 16:29:11.000.877,=C:\dev\M2Migrator\src\Unit1.pas</Transaction>
+    <Transaction>2022/02/19 16:30:19.000.964,C:\dev\M2Migrator\src\USQLConnectionParams.pas=C:\dev\M2Migrator\src\Unit1.pas</Transaction>
+    <Transaction>2022/02/19 16:30:41.000.757,C:\dev\M2Migrator\src\USQLConnectionParams.pas=</Transaction>
+    <Transaction>2022/02/19 19:35:34.000.715,=C:\dev\M2Migrator\src\Unit1.pas</Transaction>
+    <Transaction>2022/02/19 19:35:59.000.587,C:\dev\M2Migrator\src\USQL.pas=C:\dev\M2Migrator\src\Unit1.pas</Transaction>
+    <Transaction>2022/02/19 19:38:26.000.934,C:\dev\M2Migrator\src\USQL.pas=</Transaction>
+    <Transaction>2022/02/19 20:06:15.000.801,=FireDACCommon.dcp</Transaction>
+    <Transaction>2022/02/19 20:06:15.000.778,=FireDAC.dcp</Transaction>
+    <Transaction>2022/02/19 20:06:15.000.790,=FireDACCommonDriver.dcp</Transaction>
+  </Transactions>
+</BorlandProject>

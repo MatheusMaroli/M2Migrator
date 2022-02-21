@@ -3,7 +3,7 @@ unit UMigrationType;
 interface
   type
 
-   TDataBaseType = (Varchar, Number, Long, Timestamp, Blob, Integer);
+   TDataBaseType = (Varchar, Number, Long, Timestamp, Blob);
    TSQLDialectType = (Oracle, Postgre, Firebird);
    const MIGRATION_TABLE  : string  = 'MIGRATIONS_HISTORY';
 implementation

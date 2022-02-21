@@ -399,7 +399,7 @@ begin
   ' INSERT INTO ' + MIGRATION_TABLE + ' ( '+
   ' AUTHOR, MIGRATION_NAME, DATA_EXECUTED, VERSION_SYSTEM ) VALUES (' +
     QuotedStr(aMigrationAuthor) + ', ' +   QuotedStr(aMigrationName) + ',' +
-  ' (select cast(''NOW'' as timestamp) from rdb$database), '+
+  ' select cast(''NOW'' as timestamp) from rdb$database, '+
    QuotedStr(SystemVersion) + ')');
 end;
 

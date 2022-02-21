@@ -23,8 +23,6 @@ interface
       procedure ExecuteMigration(aMigration : TClass);
      protected
       property SQLDialect : TSQLDialect read FSQLDialect;
-      property DialectType : TSQLDialectType read FDialectType write FDialectType;
-
       function StartedMigrations(): Boolean; virtual;abstract;
       function MigrationExecuted(aMigrationName : string) : Boolean; virtual;
       procedure InserLogMigration(aMigrationName, aMigrationAuthor : string);virtual;abstract;
@@ -36,12 +34,12 @@ interface
       constructor Create(AOwner : TComponent);overload;override;
       constructor Create();overload;
 
-      procedure ExecuteRegisteredMigrations();
-      procedure ExecuteRegisteredSingleMigration(aName : string);
-      procedure DropRegisteredSingleMigration(aName : string);
+      procedure ExecuteRegistredMigrations();
+      procedure ExecuteRegistredSingleMigration(aName : string);
+      procedure DropRegistredSingleMigration(aName : string);
       function GetAllMigrationAuthorAndName() : TList<TMigrationAuthorAndName>;
      published
-
+      property DialectType : TSQLDialectType read FDialectType write FDialectType;
       property SQLConnection : TFDConnection read FSQLConnection write FSQLConnection;
       property SystemVersion : string read FSystemVersion write FSystemVersion;
       property MigrationClassRegister : TMigrationRigisterScript read FMigrationClassRegister write FMigrationClassRegister;
@@ -51,27 +49,18 @@ interface
     protected
       function StartedMigrations(): Boolean; override;
       procedure InserLogMigration(aMigrationName, aMigrationAuthor : string);override;
-
-      constructor Create(AOwner : TComponent);overload;override;
-      constructor Create();overload;
     end;
 
     TMigratorPostgre = class(TMigrator)
     protected
       function StartedMigrations(): Boolean; override;
       procedure InserLogMigration(aMigrationName, aMigrationAuthor : string);override;
-
-      constructor Create(AOwner : TComponent);overload;override;
-      constructor Create();overload;
     end;
 
     TMigratorFirebird = class(TMigrator)
     protected
       function StartedMigrations(): Boolean; override;
       procedure InserLogMigration(aMigrationName, aMigrationAuthor : string);override;
-
-      constructor Create(AOwner : TComponent);overload;override;
-      constructor Create();overload;
     end;
 
     procedure Register;
@@ -97,7 +86,7 @@ begin
   SQLDialect.ExecuteSQLScript(' DELETE FROM  ' + MIGRATION_TABLE + ' WHERE MIGRATION_NAME = ' + QuotedStr(aMigrationName));
 end;
 
-procedure TMigrator.DropRegisteredSingleMigration(aName: string);
+procedure TMigrator.DropRegistredSingleMigration(aName: string);
 var migrations : TList<TClass>;
 var migration : TClass;
 var rttiContext : TRttiContext;
@@ -208,7 +197,7 @@ begin
   end;
 end;
 
-procedure TMigrator.ExecuteRegisteredMigrations;
+procedure TMigrator.ExecuteRegistredMigrations;
 var migrations : TList<TClass>;
 var migration : TClass;
 begin
@@ -222,7 +211,9 @@ begin
   end;
 end;
 
-procedure TMigrator.ExecuteRegisteredSingleMigration(aName: string);
+
+
+procedure TMigrator.ExecuteRegistredSingleMigration(aName: string);
 var migrations : TList<TClass>;
 var migration : TClass;
 var rttiContext : TRttiContext;
@@ -312,17 +303,6 @@ end;
 
 { TMigratorOracle }
 
-constructor TMigratorOracle.Create;
-begin
-
-end;
-
-constructor TMigratorOracle.Create(AOwner: TComponent);
-begin
-  inherited;
-  DialectType := TSQLDialectType.Oracle
-end;
-
 procedure TMigratorOracle.InserLogMigration(aMigrationName, aMigrationAuthor: string);
 begin
   SQLDialect.ExecuteSQLScript(
@@ -330,6 +310,8 @@ begin
   ' AUTHOR, MIGRATION_NAME, DATA_EXECUTED, VERSION_SYSTEM ) VALUES (' +
     QuotedStr(aMigrationAuthor) + ', ' +   QuotedStr(aMigrationName) + ', SYSDATE, ' + QuotedStr(SystemVersion) + ')');
 end;
+
+
 
 function TMigratorOracle.StartedMigrations: Boolean;
 var query : TFDQuery;
@@ -347,17 +329,6 @@ begin
 end;
 
 { TMigratorPostgres }
-
-constructor TMigratorPostgre.Create;
-begin
-
-end;
-
-constructor TMigratorPostgre.Create(AOwner: TComponent);
-begin
-  inherited;
-  DialectType := TSQLDialectType.Postgre;
-end;
 
 procedure TMigratorPostgre.InserLogMigration(aMigrationName, aMigrationAuthor: string);
 begin
@@ -381,17 +352,6 @@ begin
 end;
 
 { TMigratorFirebird }
-
-constructor TMigratorFirebird.Create;
-begin
-
-end;
-
-constructor TMigratorFirebird.Create(AOwner: TComponent);
-begin
-  inherited;
-  DialectType := TSQLDialectType.Firebird;
-end;
 
 procedure TMigratorFirebird.InserLogMigration(aMigrationName, aMigrationAuthor: string);
 begin

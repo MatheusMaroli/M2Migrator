@@ -33,10 +33,7 @@ requires
   dbrtl,
   dsnap,
   dbexpress,
-  DbxCommonDriver,
-  FireDAC,
-  FireDACCommonDriver,
-  FireDACCommon;
+  DbxCommonDriver;
 
 contains
   UColumnOptions in 'UColumnOptions.pas',

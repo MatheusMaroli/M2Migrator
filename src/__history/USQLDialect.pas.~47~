@@ -39,13 +39,14 @@ interface
 
     TSQLDialectOracle = class(TSQLDialect)
     public
-      procedure DropTable(tableName : string);override;
-      procedure CreateForeginKey(foreginKeyOptions : TForeginKeyOptions);override;
+      procedure DropTable(tableName : string);virtual;
     end;
 
     TSQLDialectPostgre = class(TSQLDialect)
     protected
        function WrapperDataBaseNumber(column : TColumnOptions): string;override;
+    public
+      procedure CreateForeginKey(foreginKeyOptions : TForeginKeyOptions); override;
     end;
 
     TSQLDialectFirebird = class(TSQLDialect)
@@ -74,9 +75,9 @@ procedure TSQLDialect.CreateForeginKey(foreginKeyOptions: TForeginKeyOptions);
 var script : string;
 begin
   try
-    script := ' ALTER TABLE ' +foreginKeyOptions.TableOrigin + ' ADD  '+
+    script := ' ALTER TABLE ' +foreginKeyOptions.TableOrigin + ' ADD ( '+
     ' CONSTRAINT ' + foreginKeyOptions.Name + ' FOREIGN KEY ( '+  WrapperColumnForConstraint(foreginKeyOptions.ColumnTableOrigin) + ')' +
-    ' REFERENCES ' + foreginKeyOptions.TableDestiny + ' ( '+ WrapperColumnForConstraint(foreginKeyOptions.ColumnTableDestiny) +')';
+    ' REFERENCES ' + foreginKeyOptions.TableDestiny + ' ( '+ WrapperColumnForConstraint(foreginKeyOptions.ColumnTableDestiny) +'))';
     ExecuteSQLScript(script);
   except
     on E: Exception do
@@ -220,7 +221,7 @@ end;
 class function TSQLDialect.Factory(aType: TSQLDialectType): TSQLDialect;
 begin
   case aType of
-    Oracle : Result := TSQLDialectOracle.Create();
+    Oracle : Result := TSQLDialect.Create();
     Postgre : Result := TSQLDialectPostgre.Create();
     Firebird : Result := TSQLDialectFirebird.Create();
   else
@@ -307,6 +308,21 @@ end;
 
 { TSQLDialectPostgre }
 
+procedure TSQLDialectPostgre.CreateForeginKey(foreginKeyOptions: TForeginKeyOptions);
+var script : string;
+begin
+  try
+    script := ' ALTER TABLE ' +foreginKeyOptions.TableOrigin + ' ADD '+
+    ' CONSTRAINT ' + foreginKeyOptions.Name + ' FOREIGN KEY ('+  WrapperColumnForConstraint(foreginKeyOptions.ColumnTableOrigin) + ')' +
+    ' REFERENCES ' + foreginKeyOptions.TableDestiny + ' ('+ WrapperColumnForConstraint(foreginKeyOptions.ColumnTableDestiny) +')';
+    ExecuteSQLScript(script);
+  except
+    on E: Exception do
+      raise Exception.Create('Fail to execute method CreateForeginKey on default Implemention. Fail Message ===> ' + e.Message);
+  end;
+
+end;
+
 function TSQLDialectPostgre.WrapperDataBaseNumber(column: TColumnOptions): string;
 begin
   Result := ' numeric( '+ FloatToStr(column.Precision) + ')';
@@ -327,28 +343,13 @@ end;
 
 { TSQLDialectOracle }
 
-procedure TSQLDialectOracle.CreateForeginKey(foreginKeyOptions: TForeginKeyOptions);
-var script : string;
-begin
-  try
-    script := ' ALTER TABLE ' +foreginKeyOptions.TableOrigin + ' ADD  ('+
-    ' CONSTRAINT ' + foreginKeyOptions.Name + ' FOREIGN KEY ( '+  WrapperColumnForConstraint(foreginKeyOptions.ColumnTableOrigin) + ')' +
-    ' REFERENCES ' + foreginKeyOptions.TableDestiny + ' ( '+ WrapperColumnForConstraint(foreginKeyOptions.ColumnTableDestiny) +'))';
-    ExecuteSQLScript(script);
-  except
-    on E: Exception do
-      raise Exception.Create('Fail to execute method CreateForeginKey on default Implemention. Fail Message ===> ' + e.Message);
-  end;
-
-end;
-
 procedure TSQLDialectOracle.DropTable(tableName: string);
 begin
   try
     ExecuteSQLScript('DROP TABLE '+ tableName + ' CASCADE CONSTRAINTS');
   except
     on E: Exception do
-        raise Exception.Create('Fail to execute method DropTable on Oracle Implemention. Fail Message ===> ' + e.Message);
+        raise Exception.Create('Fail to execute method DropTable on default Implemention. Fail Message ===> ' + e.Message);
   end;
 end;
 
